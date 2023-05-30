@@ -9,7 +9,7 @@ class Api::V1::FactsController < ApplicationController
   def show
   end
 
-  def creat
+  def create
     @fact = Fact.new(fact_paramas)
     if @fact.save
       render json: @fact

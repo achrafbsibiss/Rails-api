@@ -1,16 +1,17 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :destroy]
-  before_action :user_paramas, only: [:create, :update]
+  before_action :set_user, only: [:edit, :update, :destroy, :show]
+#   before_action :user_params, only: [:create, :update]
   def index
     @users = User.all
     render json: @users
   end
 
   def show
+    render json: @user
   end
 
   def create
-    @user = User.new(user_paramas)
+    @user = User.new(user_params)
     if @user.save
       render json: @user
     else
@@ -19,7 +20,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    if @user.update(user_paramas)
+    @user = User.find(params[:id])
+    if @user.update(user_params)
       render json: { message: 'succesfuly updated.' }, status: 200
     else
       render error: { error: 'unable to  updated.' }, status: 400
@@ -29,10 +31,10 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def set_user
-    @user = User.find(paramas[:id])
+    @user = User.find(params[:id])
   end
 
-  def user_paramas
-    paramas.require(:user).permit(:username, :password)
+  def user_params
+    params.require(:user).permit(:username, :password)
   end
 end
